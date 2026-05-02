@@ -3,6 +3,8 @@ name = "suite2p-fork"
 version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.10"
+[tool.setuptools]
+package-dir = {"" = "suite2p"}
 dependencies = [
         "importlib-metadata",
         "natsort",
