@@ -1,10 +1,10 @@
 """
 Copyright © 2023 Howard Hughes Medical Institute, Authored by Carsen Stringer and Marius Pachitariu.
 """
+
 import numpy as np
 import pyqtgraph as pg
 from qtpy import QtCore
-from pyqtgraph import Point
 from pyqtgraph import functions as fn
 from pyqtgraph.graphicsItems.ViewBox.ViewBoxMenu import ViewBoxMenu
 
@@ -12,9 +12,17 @@ from . import masks
 
 
 class TraceBox(pg.PlotItem):
-
-    def __init__(self, parent=None, border=None, lockAspect=False, enableMouse=True,
-                 invertY=False, enableMenu=True, name=None, invertX=False):
+    def __init__(
+        self,
+        parent=None,
+        border=None,
+        lockAspect=False,
+        enableMouse=True,
+        invertY=False,
+        enableMenu=True,
+        name=None,
+        invertX=False,
+    ):
         super(TraceBox, self).__init__()
         self.parent = parent
 
@@ -22,17 +30,27 @@ class TraceBox(pg.PlotItem):
         self.zoom_plot()
 
     def zoom_plot(self):
-        self.setXRange(0, self.parent.Fcell.shape[1])
+        xmin = getattr(self.parent, "trace_xmin", 0)
+        xmax = getattr(self.parent, "trace_xmax", self.parent.Fcell.shape[1])
+        self.setXRange(xmin, xmax, padding=0.0)
         self.setYRange(self.parent.fmin, self.parent.fmax)
         self.parent.show()
 
 
 class ViewBox(pg.ViewBox):
-
-    def __init__(self, parent=None, border=None, lockAspect=False, enableMouse=True,
-                 invertY=False, enableMenu=True, name=None, invertX=False):
-        #pg.ViewBox.__init__(self, border, lockAspect, enableMouse,
-        #invertY, enableMenu, name, invertX)
+    def __init__(
+        self,
+        parent=None,
+        border=None,
+        lockAspect=False,
+        enableMouse=True,
+        invertY=False,
+        enableMenu=True,
+        name=None,
+        invertX=False,
+    ):
+        # pg.ViewBox.__init__(self, border, lockAspect, enableMouse,
+        # invertY, enableMenu, name, invertX)
         super(ViewBox, self).__init__()
         self.border = fn.mkPen(border)
         if enableMenu:
@@ -60,7 +78,12 @@ class ViewBox(pg.ViewBox):
                 iplot = 0
             else:
                 iplot = 1
-            if posy >= 0 and posx >= 0 and posy <= self.parent.Lx and posx <= self.parent.Ly:
+            if (
+                posy >= 0
+                and posx >= 0
+                and posy <= self.parent.Lx
+                and posx <= self.parent.Ly
+            ):
                 ichosen = int(self.parent.rois["iROI"][iplot, 0, posx, posy])
                 if ichosen < 0:
                     if ev.button() == QtCore.Qt.RightButton and self.menuEnabled():
@@ -74,16 +97,22 @@ class ViewBox(pg.ViewBox):
                         masks.flip_plot(self.parent)
                     else:
                         merged = False
-                        if ev.modifiers() == QtCore.Qt.ShiftModifier or ev.modifiers(
-                        ) == QtCore.Qt.ControlModifier:
-                            if self.parent.iscell[self.parent.imerge[
-                                    0]] == self.parent.iscell[ichosen]:
+                        if (
+                            ev.modifiers() == QtCore.Qt.ShiftModifier
+                            or ev.modifiers() == QtCore.Qt.ControlModifier
+                        ):
+                            if (
+                                self.parent.iscell[self.parent.imerge[0]]
+                                == self.parent.iscell[ichosen]
+                            ):
                                 if ichosen not in self.parent.imerge:
                                     self.parent.imerge.append(ichosen)
                                     self.parent.ichosen = ichosen
                                     merged = True
-                                elif ichosen in self.parent.imerge and len(
-                                        self.parent.imerge) > 1:
+                                elif (
+                                    ichosen in self.parent.imerge
+                                    and len(self.parent.imerge) > 1
+                                ):
                                     self.parent.imerge.remove(ichosen)
                                     self.parent.ichosen = self.parent.imerge[0]
                                     merged = True
@@ -114,6 +143,10 @@ def init_range(parent):
     parent.p2.setYRange(0, parent.ops["Ly"])
     parent.p3.setLimits(xMin=0, xMax=parent.Fcell.shape[1])
     parent.trange = np.arange(0, parent.Fcell.shape[1])
+    parent.trace_xmin = 0.0
+    parent.trace_xmax = (
+        float(parent.Fcell.shape[1] - 1) if parent.Fcell.shape[1] > 1 else 1.0
+    )
 
 
 def ROI_index(settings, stat):
