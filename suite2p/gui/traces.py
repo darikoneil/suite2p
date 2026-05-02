@@ -149,49 +149,47 @@ def make_buttons(parent, b0: int) -> int:
         1,
     )
     b0 += 3
-    trace_toggle_row = b0
     parent.ncedit = QLineEdit(parent)
     parent.ncedit.setValidator(QtGui.QIntValidator(0, 400))
     parent.ncedit.setText("40")
     parent.ncedit.setFixedWidth(35)
     parent.ncedit.setAlignment(QtCore.Qt.AlignRight)
     parent.ncedit.returnPressed.connect(lambda: nc_chosen(parent))
-    parent.l0.addWidget(parent.ncedit, trace_toggle_row, 0, 1, 1)
+    parent.l0.addWidget(parent.ncedit, b0, 0, 1, 1)
 
+    b0 += 1
     parent.l0.setVerticalSpacing(4)
     parent.checkBoxd = QCheckBox("deconv [N]")
     parent.checkBoxd.setStyleSheet("color: white;")
     parent.checkBoxd.toggled.connect(lambda: deconv_on(parent))
     parent.deconvOn = True
     parent.checkBoxd.toggle()
-    parent.l0.addWidget(parent.checkBoxd, trace_toggle_row, 3, 1, 2)
+    parent.l0.addWidget(parent.checkBoxd, b0, 0, 1, 2)
 
+    b0 += 1
     parent.l0.setVerticalSpacing(4)
     parent.checkBoxn = QCheckBox("neuropil [B]")
     parent.checkBoxn.setStyleSheet("color: red;")
     parent.checkBoxn.toggled.connect(lambda: neuropil_on(parent))
     parent.neuropilOn = True
     parent.checkBoxn.toggle()
-    parent.l0.addWidget(parent.checkBoxn, trace_toggle_row, 5, 1, 2)
+    parent.l0.addWidget(parent.checkBoxn, b0, 0, 1, 2)
 
+    b0 += 1
     parent.l0.setVerticalSpacing(4)
     parent.checkBoxt = QCheckBox("raw fluor [V]")
     parent.checkBoxt.setStyleSheet("color: cyan;")
     parent.checkBoxt.toggled.connect(lambda: traces_on(parent))
     parent.tracesOn = True
     parent.checkBoxt.toggle()
-    parent.l0.addWidget(parent.checkBoxt, trace_toggle_row, 7, 1, 2)
+    parent.l0.addWidget(parent.checkBoxt, b0, 0, 1, 2)
 
-    smoothing_row = trace_toggle_row + 1
+    b0 += 1
     parent.checkBoxSmooth = QCheckBox("gaussian smooth")
     parent.checkBoxSmooth.setStyleSheet("color: white;")
     parent.checkBoxSmooth.toggled.connect(lambda: smoothing_on(parent))
     parent.smoothTracesOn = False
-    parent.l0.addWidget(parent.checkBoxSmooth, smoothing_row, 3, 1, 2)
-
-    parent.l0.addWidget(
-        QLabel("<font color='white'>sigma (frames):</font>"), smoothing_row, 5, 1, 2
-    )
+    parent.l0.addWidget(parent.checkBoxSmooth, b0, 0, 1, 2)
     parent.smoothingSigmaEdit = QLineEdit(parent)
     parent.smoothingSigmaEdit.setValidator(QtGui.QDoubleValidator(0.0, 1e6, 3))
     parent.smoothingSigmaEdit.setText("1.0")
@@ -200,25 +198,27 @@ def make_buttons(parent, b0: int) -> int:
     parent.smoothingSigmaEdit.returnPressed.connect(
         lambda: trace_settings_changed(parent)
     )
-    parent.l0.addWidget(parent.smoothingSigmaEdit, smoothing_row, 7, 1, 1)
+    parent.l0.addWidget(
+        QLabel("<font color='white'>sigma (frames):</font>"), b0, 1, 1, 1
+    )
+    parent.l0.addWidget(parent.smoothingSigmaEdit, b0, 2, 1, 1)
 
+    b0 += 1
     parent.checkBoxTime = QCheckBox("time axis")
     parent.checkBoxTime.setStyleSheet("color: white;")
     parent.checkBoxTime.toggled.connect(lambda: time_axis_on(parent))
     parent.timeAxisOn = False
-    parent.l0.addWidget(parent.checkBoxTime, smoothing_row, 9, 1, 2)
+    parent.l0.addWidget(parent.checkBoxTime, b0, 0, 1, 2)
 
-    parent.l0.addWidget(
-        QLabel("<font color='white'>fps:</font>"), smoothing_row, 11, 1, 1
-    )
     parent.frameRateEdit = QLineEdit(parent)
     parent.frameRateEdit.setValidator(QtGui.QDoubleValidator(1e-9, 1e6, 6))
     parent.frameRateEdit.setPlaceholderText("auto")
     parent.frameRateEdit.setFixedWidth(55)
     parent.frameRateEdit.setAlignment(QtCore.Qt.AlignRight)
     parent.frameRateEdit.returnPressed.connect(lambda: trace_settings_changed(parent))
-    parent.l0.addWidget(parent.frameRateEdit, smoothing_row, 12, 1, 1)
-    return smoothing_row
+    parent.l0.addWidget(QLabel("<font color='white'>fps:</font>"), b0, 1, 1, 1)
+    parent.l0.addWidget(parent.frameRateEdit, b0, 2, 1, 1)
+    return b0
 
 
 def expand_scale(parent) -> None:
