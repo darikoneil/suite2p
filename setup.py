@@ -10,7 +10,13 @@ install_deps = ["importlib-metadata",
         "scipy>=1.9.0",
         "scikit-learn",
         "cellpose>=4.0.1",
-        "scanimage-tiff-reader>=1.4.1"
+        "scanimage-tiff-reader>=1.4.1",
+        "qtpy",
+        "superqt",
+        "pyqt6",
+        "pyqt6.sip",
+        "pyqtgraph",
+        "rastermap>=0.9.0",
         ]
 
 gui_deps = [
