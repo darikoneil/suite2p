@@ -198,10 +198,11 @@ def make_buttons(parent, b0: int) -> int:
     parent.smoothingSigmaEdit.returnPressed.connect(
         lambda: trace_settings_changed(parent)
     )
-    parent.l0.addWidget(
-        QLabel("<font color='white'>sigma (frames):</font>"), b0, 1, 1, 1
-    )
-    parent.l0.addWidget(parent.smoothingSigmaEdit, b0, 2, 1, 1)
+    parent.l0.addWidget(QLabel("<font color='white'>sigma:</font>"), b0, 1, 1, 1)
+
+    b0 += 1
+    parent.l0.addWidget(parent.smoothingSigmaEdit, b0, 0, 1, 1)
+    parent.l0.addWidget(QLabel("<font color='white'>(frames)</font>"), b0, 1, 1, 1)
 
     b0 += 1
     parent.checkBoxTime = QCheckBox("time axis")
@@ -217,7 +218,9 @@ def make_buttons(parent, b0: int) -> int:
     parent.frameRateEdit.setAlignment(QtCore.Qt.AlignRight)
     parent.frameRateEdit.returnPressed.connect(lambda: trace_settings_changed(parent))
     parent.l0.addWidget(QLabel("<font color='white'>fps:</font>"), b0, 1, 1, 1)
-    parent.l0.addWidget(parent.frameRateEdit, b0, 2, 1, 1)
+
+    b0 += 1
+    parent.l0.addWidget(parent.frameRateEdit, b0, 0, 1, 1)
     return b0
 
 
